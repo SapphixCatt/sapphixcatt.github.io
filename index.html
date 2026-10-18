@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SapphixCatt Websites</title>
+    <link rel="icon" type="image/png" href="img/SapphixCatt_Cube.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('img/GJ_gradientBG-hd.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1;
+        }
+
+        .corner-art {
+            position: fixed;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .bottom-right {
+            bottom: 0;
+            right: 0;
+            transform: scaleX(-1);
+        }
+
+        .top-left {
+            top: 0;
+            left: 0;
+            transform: scaleY(-1);
+        }
+
+        .top-right {
+            top: 0;
+            right: 0;
+            transform: rotate(180deg);
+        }
+
+        /* Top Bar centered horizontally at the top, scaled to 0.8 */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) scale(0.8);
+            transform-origin: top center;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .top-bar img {
+            display: block;
+            height: auto;
+            max-width: 100vw;
+        }
+
+        /* Top Cube Button Container (Centered on X-axis, 5px from top) */
+        .top-cube-container {
+            position: fixed;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 6;
+            width: 75px;
+        }
+
+        /* Center Play Button Container (Enlarged) */
+        .play-btn-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            width: 350px;
+        }
+
+        /* Left Full Webport Button Container (Enlarged) */
+        .full-btn-container {
+            position: fixed;
+            top: 50%;
+            left: calc(30% + 10px);
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            width: 255px;
+        }
+
+        /* Right Web Games Button Container (Enlarged) */
+        .games-btn-container {
+            position: fixed;
+            top: 50%;
+            right: calc(30% + 10px);
+            transform: translate(50%, -50%);
+            z-index: 10;
+            width: 255px;
+        }
+
+        /* ===================================================
+           GEOMETRY DASH BUTTON ANIMATIONS
+           =================================================== */
+
+        .btn {
+            cursor: pointer;
+            will-change: transform;
+            user-select: none;
+            -webkit-user-drag: none;
+            transform-origin: center;
+            transform: scale(1);
+        }
+
+        .btn.gd-release {
+            animation: gdRelease 0.26s ease-out forwards;
+        }
+
+        .btn.gd-hold {
+            animation: gdHold 0.26s forwards !important;
+        }
+
+        @keyframes gdHold {
+            0% {
+                transform: scale(1);
+                animation-timing-function: cubic-bezier(0.5, 0, 1, 1);
+            }
+            42.8% {
+                transform: scale(1.2);
+                animation-timing-function: ease-in-out;
+            }
+            71.4% {
+                transform: scale(1.15);
+                animation-timing-function: ease-in-out;
+            }
+            100% {
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes gdRelease {
+            0% {
+                transform: scale(1.2);
+            }
+            42.8% {
+                transform: scale(1);
+            }
+            71.4% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Social Media Row positioned directly on top of the logo and shifted 5px right */
+        .social-bar-container {
+            position: fixed;
+            bottom: 105px;
+            left: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 15;
+        }
+
+        .social-icon {
+            width: 85px;
+            height: 85px;
+        }
+
+        /* Bottom-Left Logo Offset 25px up and right */
+        .bottom-left-logo {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            width: 380px;
+            z-index: 10;
+        }
+
+        .bottom-left-logo img,
+        .top-cube-container img,
+        .play-btn-container img,
+        .full-btn-container img,
+        .games-btn-container img,
+        .social-icon img {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background"></div>
+
+    <!-- Side art in the other three corners only -->
+    <img src="img/GJ_sideArt_001.png" class="corner-art bottom-right" alt="Corner Art Bottom Right">
+    <img src="img/GJ_sideArt_001.png" class="corner-art top-left" alt="Corner Art Top Left">
+    <img src="img/GJ_sideArt_001.png" class="corner-art top-right" alt="Corner Art Top Right">
+
+    <!-- Top Bar centered at the top, scaled to 0.8 -->
+    <div class="top-bar">
+        <img src="img/GJ_topBar_001.png" alt="Top Bar">
+    </div>
+
+    <!-- Clickable Top Cube Button -->
+    <div class="top-cube-container">
+        <div id="cubeBtn" class="btn">
+            <img src="img/SapphixCatt_Cube.png" alt="SapphixCatt Cube">
+        </div>
+    </div>
+
+    <!-- Left Full Webport Button -->
+    <div class="full-btn-container">
+        <div id="fullBtn" class="btn">
+            <img src="img/GJ_fullBtn_001.png" alt="Full Webport Button">
+        </div>
+    </div>
+
+    <!-- Center Play Button -->
+    <div class="play-btn-container">
+        <div id="playBtn" class="btn">
+            <img src="img/GJ_playBtn_001.png" alt="Play Button">
+        </div>
+    </div>
+
+    <!-- Right Web Games Button -->
+    <div class="games-btn-container">
+        <div id="gamesBtn" class="btn">
+            <img src="img/GJ_moreGamesBtn_001.png" alt="More Games Button">
+        </div>
+    </div>
+
+    <!-- Social Media Icons on top of the SapphixCatt Logo -->
+    <div class="social-bar-container">
+        <div id="discordBtn" class="btn social-icon">
+            <img src="img/gj_discordIcon_001.png" alt="Discord">
+        </div>
+        <div id="ytBtn" class="btn social-icon">
+            <img src="img/gj_ytIcon_001.png" alt="YouTube">
+        </div>
+        <div id="twitchBtn" class="btn social-icon">
+            <img src="img/gj_twitchIcon_001.png" alt="Twitch">
+        </div>
+        <div id="tiktokBtn" class="btn social-icon">
+            <img src="img/gj_tiktokIcon_001.png" alt="TikTok">
+        </div>
+    </div>
+
+    <!-- SapphixCatt Logo acting as the bottom-left corner element -->
+    <div id="logoBtn" class="btn bottom-left-logo">
+        <img src="img/SapphixCatt-Logo.png" alt="SapphixCatt Logo">
+    </div>
+
+    <script>
+        // ==========================================
+        // REUSABLE GD BUTTON INTERACTION HELPER
+        // ==========================================
+        function setupGDButton(elementId, onClickCallback) {
+            const btn = document.getElementById(elementId);
+            if (!btn) return;
+
+            let isMouseDown = false;
+            let isHovered = true;
+
+            btn.addEventListener('mouseenter', () => { isHovered = true; });
+            btn.addEventListener('mouseleave', () => {
+                isHovered = false;
+                if (isMouseDown) {
+                    isMouseDown = false;
+                    btn.classList.remove('gd-hold');
+                    void btn.offsetWidth;
+                    btn.classList.add('gd-release');
+                }
+            });
+
+            btn.addEventListener('mousedown', () => {
+                isMouseDown = true;
+                btn.classList.remove('gd-release', 'gd-hold');
+                void btn.offsetWidth;
+                btn.classList.add('gd-hold');
+            });
+
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                isMouseDown = true;
+                btn.classList.remove('gd-release', 'gd-hold');
+                void btn.offsetWidth;
+                btn.classList.add('gd-hold');
+            }, { passive: false });
+
+            btn.addEventListener('mouseup', () => {
+                if (isMouseDown) {
+                    isMouseDown = false;
+                    btn.classList.remove('gd-hold', 'gd-release');
+                    if (isHovered && onClickCallback) {
+                        onClickCallback();
+                    }
+                }
+            });
+
+            btn.addEventListener('touchend', () => {
+                if (isMouseDown) {
+                    isMouseDown = false;
+                    btn.classList.remove('gd-hold', 'gd-release');
+                    if (onClickCallback) {
+                        onClickCallback();
+                    }
+                }
+            });
+        }
+
+        // ==========================================
+        // ABOUT:BLANK CLOAKING HELPER WITH FULL STORAGE PERMISSIONS
+        // ==========================================
+        function openCloaked(url) {
+            const win = window.open('about:blank', '_blank');
+            if (win) {
+                win.document.write(`
+                    <!DOCTYPE html>
+                    <html style="margin:0;padding:0;width:100%;height:100%;overflow:hidden;">
+                    <head>
+                        <title>about:blank</title>
+                        <link rel="icon" type="image/png" href="img/SapphixCatt_Cube.png">
+                    </head>
+                    <body style="margin:0;padding:0;width:100%;height:100%;overflow:hidden;">
+                        <iframe src="${url}" style="width:100%;height:100%;border:none;outline:none;display:block;" allowfullscreen="true" allow="autoplay; fullscreen; pointer-lock; storage-access; gamepad; keyboard-map"></iframe>
+                    </body>
+                    </html>
+                `);
+                win.document.close();
+            }
+        }
+
+        // ==========================================
+        // BUTTON INITIALIZATIONS
+        // ==========================================
+
+        // Bottom-Left Logo (Copies link to clipboard)
+        setupGDButton('logoBtn', () => {
+            navigator.clipboard.writeText('https://sapphixcatt.github.io/');
+        });
+
+        // Top Cube Button (GDBrowser profile)
+        setupGDButton('cubeBtn', () => {
+            window.open('https://gdbrowser.com/u/sapphixcatt', '_blank');
+        });
+
+        // Left Full Webport Button (Cloaked)
+        setupGDButton('fullBtn', () => {
+            openCloaked('https://sapphixcatt.github.io/GD-Webport/');
+        });
+
+        // Right More Games Button (Cloaked)
+        setupGDButton('gamesBtn', () => {
+            openCloaked('https://sapphixcatt.github.io/GD-Web/');
+        });
+
+        // Social Media Buttons
+        setupGDButton('discordBtn', () => {
+            window.open('https://discord.gg/dmbHpgGBsT', '_blank');
+        });
+
+        setupGDButton('ytBtn', () => {
+            window.open('https://www.youtube.com/@SapphixCatt', '_blank');
+        });
+
+        setupGDButton('twitchBtn', () => {
+            window.open('https://www.twitch.tv/sapphixcatt', '_blank');
+        });
+
+        setupGDButton('tiktokBtn', () => {
+            window.open('https://www.tiktok.com/@sapphix_catt', '_blank');
+        });
+
+        // Center Play Button (Random Cloaked Link)
+        const targetURLs = [];
+        const basePaths = [
+            'https://sapphixcatt.github.io/unlocked-website/',
+            'https://sapphixcatt.github.io/unlocked-website1/',
+            'https://sapphixcatt.github.io/unlocked-website2/'
+        ];
+
+        basePaths.forEach(base => {
+            targetURLs.push(base);
+            for (let i = 1; i <= 50; i++) {
+                targetURLs.push(base + i);
+            }
+        });
+
+        function getRandomWebsite() {
+            const randomIndex = Math.floor(Math.random() * targetURLs.length);
+            return targetURLs[randomIndex];
+        }
+
+        setupGDButton('playBtn', () => {
+            openCloaked(getRandomWebsite());
+        });
+    </script>
+
+</body>
+</html>
