@@ -326,24 +326,27 @@
         }
 
         // ==========================================
-        // ABOUT:BLANK CLOAKING HELPER WITH FULL STORAGE PERMISSIONS
+        // ABOUT:BLANK CLOAKING HELPER
+        // Opens target in a true about:blank popup tab
         // ==========================================
         function openCloaked(url) {
             const win = window.open('about:blank', '_blank');
             if (win) {
-                win.document.write(`
+                const doc = win.document;
+                doc.open();
+                doc.write(`
                     <!DOCTYPE html>
                     <html style="margin:0;padding:0;width:100%;height:100%;overflow:hidden;">
                     <head>
                         <title>about:blank</title>
-                        <link rel="icon" type="image/png" href="img/SapphixCatt_Cube.png">
+                        <link rel="icon" type="image/png" href="https://sapphixcatt.github.io/img/SapphixCatt_Cube.png">
                     </head>
                     <body style="margin:0;padding:0;width:100%;height:100%;overflow:hidden;">
                         <iframe src="${url}" style="width:100%;height:100%;border:none;outline:none;display:block;" allowfullscreen="true" allow="autoplay; fullscreen; pointer-lock; storage-access; gamepad; keyboard-map"></iframe>
                     </body>
                     </html>
                 `);
-                win.document.close();
+                doc.close();
             }
         }
 
