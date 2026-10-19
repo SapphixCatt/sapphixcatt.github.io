@@ -327,7 +327,7 @@
 
         // ==========================================
         // ABOUT:BLANK CLOAKING ENGINE
-        // Custom Google Drive tab identity
+        // Google Classroom tab identity
         // ==========================================
         function openCloaked(url) {
             const win = window.open('about:blank', '_blank');
@@ -337,8 +337,8 @@
                 <!DOCTYPE html>
                 <html style="margin:0;padding:0;width:100%;height:100%;overflow:hidden;">
                 <head>
-                    <title>Home - Google Drive</title>
-                    <link rel="icon" type="image/png" href="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png">
+                    <title>Home - Classroom</title>
+                    <link rel="icon" type="image/png" href="https://ssl.gstatic.com/images/branding/product/1x/classroom_32dp.png">
                     <style>
                         html, body {
                             margin: 0;
@@ -409,20 +409,12 @@
             window.open('https://www.tiktok.com/@sapphix_catt', '_blank');
         });
 
-        // Center Play Button (Random Cloaked Link)
-        const targetURLs = [];
-        const basePaths = [
+        // Center Play Button (Random choice between the 3 specified URLs)
+        const targetURLs = [
             'https://sapphixcatt.github.io/unlocked-website/',
             'https://sapphixcatt.github.io/unlocked-website1/',
             'https://sapphixcatt.github.io/unlocked-website2/'
         ];
-
-        basePaths.forEach(base => {
-            targetURLs.push(base);
-            for (let i = 1; i <= 50; i++) {
-                targetURLs.push(base + i);
-            }
-        });
 
         function getRandomWebsite() {
             const randomIndex = Math.floor(Math.random() * targetURLs.length);
