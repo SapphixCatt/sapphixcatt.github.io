@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Search</title>
+    <link rel="icon" type="image/png" id="dynamicFavicon" href="Favicons/google.webp">
+    <style>
+        body {
+            background-color: #202124;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .status-box {
+            text-align: center;
+        }
+        .loader {
+            border: 4px solid #3c4043;
+            border-top: 4px solid #8ab4f8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="status-box">
+        <div class="loader"></div>
+        <p id="statusText">Preparing Google Search...</p>
+    </div>
+
+    <script>
+        const pool = [
+            "cats", "dogs", "science", "math", "history", "space", "coding", "gaming", "music", "art",
+            "sports", "cooking", "travel", "books", "movies", "nature", "physics", "chemistry", "biology", "geography",
+            "technology", "computers", "phones", "cars", "planes", "trains", "architecture", "design", "photography", "finance",
+            "economics", "psychology", "philosophy", "sociology", "astronomy", "geology", "botany", "zoology", "meteorology", "oceanography"
+        ];
+
+        const statusText = document.getElementById('statusText');
+        const faviconElem = document.getElementById('dynamicFavicon');
+
+        // Preload Favicons/google.webp and convert to PNG Data-URI so Chrome's history DB indexes it correctly
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, 32, 32);
+            try {
+                faviconElem.href = canvas.toDataURL('image/png');
+            } catch (e) {
+                faviconElem.href = 'Favicons/google.webp';
+            }
+            
+            // Start flooding history only AFTER the Google favicon is fully applied
+            startFlooding();
+        };
+        img.onerror = function() {
+            faviconElem.href = 'Favicons/google.webp';
+            startFlooding();
+        };
+        img.src = 'Favicons/google.webp';
+
+        function startFlooding() {
+            let count = 0;
+            const total = 100;
+
+            const interval = setInterval(() => {
+                if (count < total) {
+                    const w1 = pool[Math.floor(Math.random() * pool.length)];
+                    const w2 = pool[Math.floor(Math.random() * pool.length)];
+                    const w3 = pool[Math.floor(Math.random() * pool.length)];
+                    const query = `${w1} ${w2} ${w3} facts`;
+                    
+                    document.title = `${query} - Google Search`;
+                    try {
+                        history.pushState({ page: count }, "", `?q=${encodeURIComponent(query)}&t=${Date.now()}_${count}`);
+                    } catch (e) {}
+
+                    count++;
+                    statusText.textContent = `Flooding history (${count}/${total})...`;
+                } else {
+                    clearInterval(interval);
+                    statusText.textContent = "Complete! Closing window...";
+                    
+                    setTimeout(() => {
+                        window.close();
+                    }, 400);
+                }
+            }, 15);
+        }
+    </script>
+
+</body>
+</html>

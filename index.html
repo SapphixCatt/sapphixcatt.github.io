@@ -82,6 +82,15 @@
             width: 75px;
         }
 
+        /* Top Right Flood History Button Container (Enlarged) */
+        .flood-btn-container {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 20;
+            width: 300px;
+        }
+
         /* Center Play Button Container (Enlarged) */
         .play-btn-container {
             position: fixed;
@@ -193,6 +202,7 @@
 
         .bottom-left-logo img,
         .top-cube-container img,
+        .flood-btn-container img,
         .play-btn-container img,
         .full-btn-container img,
         .games-btn-container img,
@@ -222,6 +232,13 @@
     <div class="top-cube-container">
         <div id="cubeBtn" class="btn">
             <img src="img/SapphixCatt_Cube.png" alt="SapphixCatt Cube">
+        </div>
+    </div>
+
+    <!-- Top Right Flood History Button -->
+    <div class="flood-btn-container">
+        <div id="floodBtn" class="btn">
+            <img src="img/FloodMyHistory_BTN.png" alt="Flood My History">
         </div>
     </div>
 
@@ -268,9 +285,30 @@
     </div>
 
     <script>
-        // ==========================================
-        // REUSABLE GD BUTTON INTERACTION HELPER
-        // ==========================================
+        function getAbsoluteUrl(relativePath) {
+            const loc = window.location;
+            const pathSegments = loc.pathname.split('/');
+            pathSegments.pop();
+            return loc.origin + pathSegments.join('/') + '/' + relativePath;
+        }
+
+        // Preload classroom favicon to Data-URI for stable about:blank cloaking (DO NOT TOUCH)
+        let classroomDataUri = getAbsoluteUrl('Favicons/classroom.webp');
+        function cacheImageAsDataUri(path, setter) {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 32;
+                canvas.height = 32;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, 32, 32);
+                try { setter(canvas.toDataURL('image/png')); } catch(e) {}
+            };
+            img.src = path;
+        }
+        cacheImageAsDataUri('Favicons/classroom.webp', (uri) => { classroomDataUri = uri; });
+
         function setupGDButton(elementId, onClickCallback) {
             const btn = document.getElementById(elementId);
             if (!btn) return;
@@ -325,10 +363,6 @@
             });
         }
 
-        // ==========================================
-        // ABOUT:BLANK CLOAKING ENGINE
-        // Google Classroom tab identity
-        // ==========================================
         function openCloaked(url) {
             const win = window.open('about:blank', '_blank');
             if (!win) return;
@@ -338,7 +372,7 @@
                 <html style="margin:0;padding:0;width:100%;height:100%;overflow:hidden;">
                 <head>
                     <title>Home - Classroom</title>
-                    <link rel="icon" type="image/png" href="https://ssl.gstatic.com/images/branding/product/1x/classroom_32dp.png">
+                    <link rel="icon" type="image/png" href="${classroomDataUri}">
                     <style>
                         html, body {
                             margin: 0;
@@ -368,31 +402,27 @@
             win.document.close();
         }
 
-        // ==========================================
-        // BUTTON INITIALIZATIONS
-        // ==========================================
-
-        // Bottom-Left Logo (Copies link to clipboard)
         setupGDButton('logoBtn', () => {
             navigator.clipboard.writeText('https://sapphixcatt.github.io/');
         });
 
-        // Top Cube Button (GDBrowser profile)
         setupGDButton('cubeBtn', () => {
             window.open('https://gdbrowser.com/u/sapphixcatt', '_blank');
         });
 
-        // Left Full Webport Button (Cloaked)
+        // Top Right Flood History Button: Opens index-flood.html in a new tab
+        setupGDButton('floodBtn', () => {
+            window.open('history-flooder/index-flood.html', '_blank');
+        });
+
         setupGDButton('fullBtn', () => {
             openCloaked('https://sapphixcatt.github.io/GD-Webport/');
         });
 
-        // Right More Games Button (Cloaked)
         setupGDButton('gamesBtn', () => {
             openCloaked('https://sapphixcatt.github.io/GD-Web/');
         });
 
-        // Social Media Buttons
         setupGDButton('discordBtn', () => {
             window.open('https://discord.gg/dmbHpgGBsT', '_blank');
         });
@@ -409,7 +439,6 @@
             window.open('https://www.tiktok.com/@sapphix_catt', '_blank');
         });
 
-        // Center Play Button (Random choice between the 3 specified URLs)
         const targetURLs = [
             'https://sapphixcatt.github.io/unlocked-website/',
             'https://sapphixcatt.github.io/unlocked-website1/',
@@ -417,8 +446,7 @@
         ];
 
         function getRandomWebsite() {
-            const randomIndex = Math.floor(Math.random() * targetURLs.length);
-            return targetURLs[randomIndex];
+            return targetURLs[Math.floor(Math.random() * targetURLs.length)];
         }
 
         setupGDButton('playBtn', () => {
