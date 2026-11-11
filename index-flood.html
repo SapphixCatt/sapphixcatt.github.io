@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Search</title>
-    <link rel="icon" type="image/webp" href="google.webp">
+    <!-- Cache-busting query parameter forces the browser to ignore old cache -->
+    <link rel="icon" type="image/png" id="dynamicFavicon" href="google.png?v=2">
     <style>
         body {
             background-color: #202124;
@@ -39,7 +40,7 @@
 
     <div class="status-box">
         <div class="loader"></div>
-        <p id="statusText">Flooding history (0/100)...</p>
+        <p id="statusText">Loading Google Favicon...</p>
     </div>
 
     <script>
@@ -50,44 +51,48 @@
             "economics", "psychology", "philosophy", "sociology", "astronomy", "geology", "botany", "zoology", "meteorology", "oceanography"
         ];
 
-        let count = 0;
-        const total = 100;
         const statusText = document.getElementById('statusText');
 
-        // Create a hidden iframe pointing to google.webp to force Chrome's favicon database to index the icon per URL
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
+        // Preload google.png with cache-buster
+        const preloadImg = new Image();
+        preloadImg.onload = function() {
+            statusText.textContent = "Flooding history (0/100)...";
+            startFlooding();
+        };
+        preloadImg.onerror = function() {
+            statusText.textContent = "Flooding history (0/100)...";
+            startFlooding();
+        };
+        preloadImg.src = 'google.png?v=2';
 
-        const interval = setInterval(() => {
-            if (count < total) {
-                const w1 = pool[Math.floor(Math.random() * pool.length)];
-                const w2 = pool[Math.floor(Math.random() * pool.length)];
-                const w3 = pool[Math.floor(Math.random() * pool.length)];
-                const query = `${w1} ${w2} ${w3} facts`;
-                
-                document.title = `${query} - Google Search`;
-                
-                const targetUrl = `google.webp?q=${encodeURIComponent(query)}&t=${Date.now()}_${count}`;
-                
-                try {
-                    // Push state and load the icon resource into the background iframe simultaneously 
-                    // so Chrome binds the favicon asset directly to the history entries
-                    history.pushState({ page: count }, "", `?q=${encodeURIComponent(query)}&t=${Date.now()}_${count}`);
-                    iframe.src = targetUrl;
-                } catch (e) {}
+        function startFlooding() {
+            let count = 0;
+            const total = 100;
 
-                count++;
-                statusText.textContent = `Flooding history (${count}/${total})...`;
-            } else {
-                clearInterval(interval);
-                statusText.textContent = "Complete! Closing window...";
-                
-                setTimeout(() => {
-                    window.close();
-                }, 600);
-            }
-        }, 35);
+            const interval = setInterval(() => {
+                if (count < total) {
+                    const w1 = pool[Math.floor(Math.random() * pool.length)];
+                    const w2 = pool[Math.floor(Math.random() * pool.length)];
+                    const w3 = pool[Math.floor(Math.random() * pool.length)];
+                    const query = `${w1} ${w2} ${w3} facts`;
+                    
+                    document.title = `${query} - Google Search`;
+                    try {
+                        history.pushState({ page: count }, "", `?q=${encodeURIComponent(query)}&t=${Date.now()}_${count}`);
+                    } catch (e) {}
+
+                    count++;
+                    statusText.textContent = `Flooding history (${count}/${total})...`;
+                } else {
+                    clearInterval(interval);
+                    statusText.textContent = "Complete! Closing window...";
+                    
+                    setTimeout(() => {
+                        window.close();
+                    }, 400);
+                }
+            }, 15);
+        }
     </script>
 
 </body>

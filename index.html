@@ -293,7 +293,7 @@
         }
 
         // Preload classroom favicon to Data-URI for stable about:blank cloaking (DO NOT TOUCH)
-        let classroomDataUri = getAbsoluteUrl('Favicons/classroom.webp');
+        let classroomDataUri = getAbsoluteUrl('Favicons/classroom.png');
         function cacheImageAsDataUri(path, setter) {
             const img = new Image();
             img.crossOrigin = 'anonymous';
@@ -307,7 +307,7 @@
             };
             img.src = path;
         }
-        cacheImageAsDataUri('Favicons/classroom.webp', (uri) => { classroomDataUri = uri; });
+        cacheImageAsDataUri('Favicons/classroom.png', (uri) => { classroomDataUri = uri; });
 
         function setupGDButton(elementId, onClickCallback) {
             const btn = document.getElementById(elementId);
