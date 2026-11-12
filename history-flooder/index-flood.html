@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Search</title>
-    <link rel="icon" type="image/png" id="dynamicFavicon" href="Favicons/google.webp">
+    <link rel="icon" type="image/png" href="google.png">
     <style>
         body {
             background-color: #202124;
@@ -39,7 +39,7 @@
 
     <div class="status-box">
         <div class="loader"></div>
-        <p id="statusText">Preparing Google Search...</p>
+        <p id="statusText">Loading Google Favicon...</p>
     </div>
 
     <script>
@@ -51,31 +51,17 @@
         ];
 
         const statusText = document.getElementById('statusText');
-        const faviconElem = document.getElementById('dynamicFavicon');
 
-        // Preload Favicons/google.webp and convert to PNG Data-URI so Chrome's history DB indexes it correctly
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = function() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 32;
-            canvas.height = 32;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, 32, 32);
-            try {
-                faviconElem.href = canvas.toDataURL('image/png');
-            } catch (e) {
-                faviconElem.href = 'Favicons/google.webp';
-            }
-            
-            // Start flooding history only AFTER the Google favicon is fully applied
+        const preloadImg = new Image();
+        preloadImg.onload = function() {
+            statusText.textContent = "Flooding history (0/100)...";
             startFlooding();
         };
-        img.onerror = function() {
-            faviconElem.href = 'Favicons/google.webp';
+        preloadImg.onerror = function() {
+            statusText.textContent = "Flooding history (0/100)...";
             startFlooding();
         };
-        img.src = 'Favicons/google.webp';
+        preloadImg.src = 'google.png';
 
         function startFlooding() {
             let count = 0;
