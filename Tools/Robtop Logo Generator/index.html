@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RobTop Games Logo Generator</title>
+  <link rel="icon" type="image/png" href="Favicons/favicon.png">
+  <link rel="stylesheet" href="btnAnim.css">
+  <style>
+    @font-face {
+      font-family: 'Pusab';
+      src: url('fonts/pusab.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 30px;
+      gap: 10px;
+      background-color: #2b2b2b;
+      background-image: url('img/bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: white;
+    }
+
+    /* Top Navigation / Control Bar */
+    .top-bar {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .top-bar > * {
+      pointer-events: auto;
+    }
+
+    .back-btn-container img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+    }
+
+    .layer-toggles {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 10px 14px;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .toggle-label {
+      font-family: 'Pusab', sans-serif;
+      font-size: 14px;
+      color: #ffffff;
+      -webkit-text-stroke: 1.5px #000000;
+      paint-order: stroke fill;
+      user-select: none;
+    }
+
+    .toggle-btn {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+
+    .logo-stage {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: visible;
+      padding: 0 20px;
+      margin-top: 40px;
+    }
+
+    svg#logoSvg {
+      overflow: visible;
+      display: block;
+      width: 100%;
+      max-width: 820px;
+      height: auto;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
+      width: 100%;
+      padding: 0 20px;
+      margin-bottom: 30px;
+    }
+
+    .message-label {
+      font-family: 'Pusab', sans-serif;
+      font-size: 33px;
+      line-height: 1;
+      color: #ffc800;
+      -webkit-text-stroke: 3px #000000;
+      paint-order: stroke fill;
+      letter-spacing: 0.75px;
+      user-select: none;
+      text-align: center;
+      transform: translateY(-5px);
+    }
+
+    .gj-frame {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+      width: 750px;
+      max-width: 100%;
+      padding: 22px 52px 38px 52px;
+      border-style: solid;
+      border-width: 36px;
+      border-image-source: url('img/GJ_square01-uhd.png');
+      border-image-slice: 48 fill;
+      border-image-repeat: stretch;
+    }
+
+    .gj-frame textarea {
+      padding: 18px 27px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 27px;
+      line-height: 1.35;
+      border-radius: 12px;
+      border: none;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      outline: none;
+      text-align: center;
+      width: 100%;
+      min-height: 75px;
+      resize: none;
+      overflow: hidden;
+    }
+
+    textarea::placeholder {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #c8c8c8;
+    }
+
+    textarea:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      width: 100%;
+      margin-top: 9px;
+    }
+
+    .action-btn {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+    }
+
+    .copy-notification {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      font-family: 'Pusab', sans-serif;
+      font-size: 28px;
+      color: #ffffff;
+      -webkit-text-stroke: 2px #000000;
+      paint-order: stroke fill;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px 24px;
+      border-radius: 10px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 1000;
+    }
+    .copy-notification.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .logo-text {
+      font-family: 'Pusab', sans-serif;
+      font-size: 20px;
+      letter-spacing: -0.2px;
+      word-spacing: 4px;
+      text-anchor: middle;
+      dominant-baseline: central;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      paint-order: stroke fill;
+      user-select: none;
+    }
+
+    /* Layer Base Styles - Increased shadow opacity for visibility */
+    .layer-shadow {
+      fill: #000000;
+      filter: url(#uniformShadow10);
+      opacity: 1;
+    }
+
+    .layer-outer-rim {
+      fill: url(#outerRimGrad);
+    }
+
+    .layer-main-block {
+      fill: url(#mainBlockGrad);
+    }
+
+    .layer-yellow-text {
+      fill: #ffee00;
+    }
+
+    .layer-black-text {
+      fill: #000000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar with Back Button and 5 Layer Toggles -->
+  <div class="top-bar">
+    <div class="back-btn-container">
+      <img id="btnBack" class="btn" src="img/btn_back.png" alt="Back" title="Go Back">
+    </div>
+    <div class="layer-toggles">
+      <div class="toggle-row">
+        <span class="toggle-label">Black Text</span>
+        <img id="toggleBlack" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Black Text" data-layer="black">
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Yellow Text</span>
+        <img id="toggleYellow" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Yellow Text" data-layer="yellow">
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Text Background</span>
+        <img id="toggleMain" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Text Background" data-layer="main">
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Text Background Outline</span>
+        <img id="toggleOuter" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Text Background Outline" data-layer="outer">
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Shadow</span>
+        <img id="toggleShadow" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Shadow" data-layer="shadow">
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-stage" id="logoStage">
+    <svg id="logoSvg" xmlns="http://www.w3.org/2000/svg">
+      <defs id="svgDefs">
+        <!-- Main block gradient -->
+        <linearGradient id="mainBlockGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#feb403" />
+          <stop offset="100%" stop-color="#ff8201" />
+        </linearGradient>
+
+        <!-- Outer rim gradient -->
+        <linearGradient id="outerRimGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#feef78" />
+          <stop offset="100%" stop-color="#f15d03" />
+        </linearGradient>
+
+        <!-- Proportional blurred shadow filter -->
+        <filter id="uniformShadow10" x="-200%" y="-200%" width="500%" height="500%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="11" result="blurOut" />
+        </filter>
+      </defs>
+
+      <!-- Exact Global Layer Containers (Zero Separation Wrappers) -->
+      <g id="groupShadow"></g>
+      <g id="groupOuter"></g>
+      <g id="groupMain"></g>
+      <g id="groupYellow"></g>
+      <g id="groupBlack"></g>
+    </svg>
+  </div>
+
+  <div class="controls">
+    <div class="gj-frame">
+      <div class="message-label">Message</div>
+      <textarea id="logoInput" rows="1" placeholder="Type Something!" autocomplete="off"></textarea>
+      
+      <!-- Action Buttons Row with btn class for animations -->
+      <div class="button-row">
+        <img id="btnDownload" class="btn action-btn" src="img/btn_download.png" alt="Download Logo" title="Download PNG">
+        <img id="btnCopy" class="btn action-btn" src="img/btn_copy.png" alt="Copy Logo" title="Copy Image">
+      </div>
+    </div>
+  </div>
+
+  <!-- Copied Notification Element -->
+  <div id="copyNotification" class="copy-notification">Copied!</div>
+
+  <script>
+    const input = document.getElementById('logoInput');
+    const svg = document.getElementById('logoSvg');
+    const svgDefs = document.getElementById('svgDefs');
+
+    const groupShadow = document.getElementById('groupShadow');
+    const groupOuter = document.getElementById('groupOuter');
+    const groupMain = document.getElementById('groupMain');
+    const groupYellow = document.getElementById('groupYellow');
+    const groupBlack = document.getElementById('groupBlack');
+
+    // Layer visibility state tracker
+    const layerStates = {
+      shadow: true,
+      outer: true,
+      main: true,
+      yellow: true,
+      black: true
+    };
+
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+    const DEFAULT_LINES = ['RobTop Games', 'Logo Generator!'];
+    const LINE_HEIGHT = 26; // Scaled down for 20px font size
+
+    function getLines(rawValue) {
+      if (rawValue.trim().length === 0) {
+        return DEFAULT_LINES;
+      }
+      return rawValue.split('\n').map(line => line.length > 0 ? line : ' ');
+    }
+
+    function autoGrowTextarea() {
+      input.style.height = 'auto';
+      input.style.height = `${input.scrollHeight}px`;
+    }
+
+    function renderLines(lines) {
+      svgDefs.innerHTML = `
+        <linearGradient id="mainBlockGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#feb403" />
+          <stop offset="100%" stop-color="#ff8201" />
+        </linearGradient>
+
+        <linearGradient id="outerRimGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#feef78" />
+          <stop offset="100%" stop-color="#f15d03" />
+        </linearGradient>
+
+        <filter id="uniformShadow10" x="-200%" y="-200%" width="500%" height="500%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="11" result="blurOut" />
+        </filter>
+      `;
+
+      groupShadow.innerHTML = '';
+      groupOuter.innerHTML = '';
+      groupMain.innerHTML = '';
+      groupYellow.innerHTML = '';
+      groupBlack.innerHTML = '';
+
+      const totalLines = lines.length;
+      const startY = -((totalLines - 1) * LINE_HEIGHT) / 2;
+
+      lines.forEach((line, index) => {
+        const yPos = startY + (index * LINE_HEIGHT);
+        const outerMaskId = `outerMask-${index}`;
+        const mainMaskId = `mainMask-${index}`;
+
+        function createMask(maskId, strokeWidth) {
+          const mask = document.createElementNS(SVG_NS, 'mask');
+          mask.setAttribute('id', maskId);
+
+          const bg = document.createElementNS(SVG_NS, 'rect');
+          bg.setAttribute('x', '-2500');
+          bg.setAttribute('y', '-1500');
+          bg.setAttribute('width', '5000');
+          bg.setAttribute('height', '3000');
+          bg.setAttribute('fill', 'black');
+          mask.appendChild(bg);
+
+          const text = document.createElementNS(SVG_NS, 'text');
+          text.setAttribute('class', 'logo-text');
+          text.setAttribute('x', '0');
+          text.setAttribute('y', yPos);
+          text.setAttribute('fill', 'white');
+          text.setAttribute('stroke', 'white');
+          text.setAttribute('stroke-width', strokeWidth);
+          text.setAttribute('stroke-linejoin', 'round');
+          text.setAttribute('stroke-linecap', 'round');
+          text.textContent = line;
+          mask.appendChild(text);
+
+          const offsets = [
+            {dx: 0, dy: -2}, {dx: 0, dy: 2},
+            {dx: -2, dy: 0}, {dx: 2, dy: 0},
+            {dx: 0, dy: 0}
+          ];
+          offsets.forEach(offset => {
+            const fillPass = document.createElementNS(SVG_NS, 'text');
+            fillPass.setAttribute('class', 'logo-text');
+            fillPass.setAttribute('x', offset.dx);
+            fillPass.setAttribute('y', yPos + offset.dy);
+            fillPass.setAttribute('fill', 'white');
+            fillPass.textContent = line;
+            mask.appendChild(fillPass);
+          });
+
+          svgDefs.appendChild(mask);
+        }
+
+        createMask(outerMaskId, 8.5);
+        createMask(mainMaskId, 6.5);
+
+        function createMaskedRect(maskId, className, fillValue, offsetY = 0) {
+          const rect = document.createElementNS(SVG_NS, 'rect');
+          rect.setAttribute('class', className);
+          rect.setAttribute('x', '-2000');
+          rect.setAttribute('y', yPos - 27.5 + offsetY);
+          rect.setAttribute('width', '4000');
+          rect.setAttribute('height', '55');
+          rect.setAttribute('fill', fillValue);
+          rect.setAttribute('mask', `url(#${maskId})`);
+          return rect;
+        }
+
+        function createTextElement(className, offsetX = 0, offsetY = 0) {
+          const t = document.createElementNS(SVG_NS, 'text');
+          t.setAttribute('class', `logo-text ${className}`);
+          t.setAttribute('x', offsetX);
+          t.setAttribute('y', yPos + offsetY);
+          t.textContent = line;
+          return t;
+        }
+
+        const shadowText = document.createElementNS(SVG_NS, 'text');
+        shadowText.setAttribute('class', 'logo-text layer-shadow');
+        shadowText.setAttribute('x', '0');
+        shadowText.setAttribute('y', yPos);
+        shadowText.textContent = line;
+        groupShadow.appendChild(shadowText);
+
+        groupOuter.appendChild(createMaskedRect(outerMaskId, 'layer-outer-rim', 'url(#outerRimGrad)', 0));
+        groupMain.appendChild(createMaskedRect(mainMaskId, 'layer-main-block', 'url(#mainBlockGrad)', 0));
+        groupYellow.appendChild(createTextElement('layer-yellow-text', 0.25, 0.25));
+        groupBlack.appendChild(createTextElement('layer-black-text', 0, 0));
+      });
+
+      applyLayerVisibility();
+      resizeSvg(lines);
+    }
+
+    function applyLayerVisibility() {
+      groupShadow.style.display = layerStates.shadow ? '' : 'none';
+      groupOuter.style.display = layerStates.outer ? '' : 'none';
+      groupMain.style.display = layerStates.main ? '' : 'none';
+      groupYellow.style.display = layerStates.yellow ? '' : 'none';
+      groupBlack.style.display = layerStates.black ? '' : 'none';
+    }
+
+    function getTightBox(lines) {
+      const maxLen = Math.max(...lines.map(l => l.length), 4);
+      const vbWidth = Math.max(300, maxLen * 12 + 10);
+      const vbHeight = Math.max(60, lines.length * LINE_HEIGHT + 10);
+      const vbX = -vbWidth / 2;
+      const vbY = -vbHeight / 2;
+      return { vbX, vbY, vbWidth, vbHeight };
+    }
+
+    function resizeSvg(lines) {
+      const box = getTightBox(lines);
+      svg.setAttribute('viewBox', `${box.vbX} ${box.vbY} ${box.vbWidth} ${box.vbHeight}`);
+    }
+
+    /* Helper to convert pusab font to base64 so canvas rendering matches properly */
+    let cachedFontDataUri = null;
+    async function getPusabFontDataUri() {
+      if (cachedFontDataUri) return cachedFontDataUri;
+      try {
+        const res = await fetch('fonts/pusab.otf');
+        if (!res.ok) return null;
+        const blob = await res.blob();
+        return await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            cachedFontDataUri = reader.result;
+            resolve(cachedFontDataUri);
+          };
+          reader.onerror = () => resolve(null);
+          reader.readAsDataURL(blob);
+        });
+      } catch (e) {
+        return null;
+      }
+    }
+
+    /* Button Press Animation & Click Handler using btnAnim.css classes */
+    function attachButtonEffects(btnId, onClickCallback) {
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+
+      const pressDown = () => {
+        btn.classList.remove('gd-release');
+        void btn.offsetWidth;
+        btn.classList.add('gd-hold');
+      };
+
+      const releaseUp = () => {
+        if (btn.classList.contains('gd-hold')) {
+          btn.classList.remove('gd-hold');
+          btn.classList.add('gd-release');
+        }
+      };
+
+      btn.addEventListener('mousedown', pressDown);
+      btn.addEventListener('mouseup', releaseUp);
+      btn.addEventListener('mouseleave', releaseUp);
+
+      btn.addEventListener('touchstart', pressDown, { passive: true });
+      btn.addEventListener('touchend', releaseUp, { passive: true });
+
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        onClickCallback();
+      });
+    }
+
+    // Attach button animations and actions for action buttons and navigation (goes 1 directory back)
+    attachButtonEffects('btnBack', () => {
+      window.location.href = '../index.html';
+    });
+
+    // Attach toggle button listeners
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+      const layerKey = btn.getAttribute('data-layer');
+      attachButtonEffects(btn.id, () => {
+        layerStates[layerKey] = !layerStates[layerKey];
+        btn.src = layerStates[layerKey] ? 'img/btn_on.png' : 'img/btn_off.png';
+        applyLayerVisibility();
+      });
+    });
+
+    async function generateLogoBlob() {
+      await document.fonts.ready;
+      const fontDataUri = await getPusabFontDataUri();
+      const lines = getLines(input.value);
+      const box = getTightBox(lines);
+
+      const clonedSvg = svg.cloneNode(true);
+      clonedSvg.setAttribute('xmlns', SVG_NS);
+      clonedSvg.setAttribute('width', box.vbWidth);
+      clonedSvg.setAttribute('height', box.vbHeight);
+      clonedSvg.setAttribute('viewBox', `${box.vbX} ${box.vbY} ${box.vbWidth} ${box.vbHeight}`);
+      
+      const fontFaceRule = fontDataUri
+        ? `@font-face { font-family: 'Pusab'; src: url('${fontDataUri}') format('opentype'); }`
+        : '';
+
+      const styleEl = document.createElementNS(SVG_NS, 'style');
+      styleEl.textContent = `
+        ${fontFaceRule}
+        .logo-text {
+          font-family: 'Pusab', sans-serif;
+          font-size: 20px;
+          letter-spacing: -0.2px;
+          word-spacing: 4px;
+          text-anchor: middle;
+          dominant-baseline: central;
+          stroke-linejoin: round;
+          stroke-linecap: round;
+          paint-order: stroke fill;
+        }
+        .layer-shadow {
+          fill: #000000;
+          filter: url(#uniformShadow10);
+          opacity: 1;
+        }
+        .layer-outer-rim {
+          fill: url(#outerRimGrad);
+        }
+        .layer-main-block {
+          fill: url(#mainBlockGrad);
+        }
+        .layer-yellow-text {
+          fill: #ffee00;
+        }
+        .layer-black-text {
+          fill: #000000;
+        }
+      `;
+      clonedSvg.insertBefore(styleEl, clonedSvg.firstChild);
+
+      const svgString = new XMLSerializer().serializeToString(clonedSvg);
+      const svgBase64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString)));
+
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => {
+          // Ultra HD high-resolution rendering scale (4x crisp detail)
+          const canvas = document.createElement('canvas');
+          const scale = 4;
+          canvas.width = box.vbWidth * scale;
+          canvas.height = box.vbHeight * scale;
+          const context = canvas.getContext('2d');
+          context.scale(scale, scale);
+          context.drawImage(image, 0, 0);
+
+          const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imgData.data;
+          let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
+          let found = false;
+
+          for (let y = 0; y < canvas.height; y++) {
+            for (let x = 0; x < canvas.width; x++) {
+              const alpha = data[(y * canvas.width + x) * 4 + 3];
+              if (alpha > 0) {
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+                found = true;
+              }
+            }
+          }
+
+          if (!found) {
+            canvas.toBlob((blob) => resolve(blob), 'image/png');
+            return;
+          }
+
+          const cropWidth = maxX - minX + 1;
+          const cropHeight = maxY - minY + 1;
+          const croppedCanvas = document.createElement('canvas');
+          croppedCanvas.width = cropWidth;
+          croppedCanvas.height = cropHeight;
+          const croppedCtx = croppedCanvas.getContext('2d');
+          croppedCtx.drawImage(canvas, minX, minY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+
+          croppedCanvas.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error('Canvas toBlob failed'));
+          }, 'image/png');
+        };
+        image.onerror = (err) => reject(err);
+        image.src = svgBase64;
+      });
+    }
+
+    function showCopyNotification(message = 'Copied!') {
+      const note = document.getElementById('copyNotification');
+      note.textContent = message;
+      note.classList.add('show');
+      setTimeout(() => {
+        note.classList.remove('show');
+      }, 2000);
+    }
+
+    attachButtonEffects('btnDownload', async () => {
+      try {
+        const blob = await generateLogoBlob();
+        const url = URL.createObjectURL(blob);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = url;
+        const rawText = input.value.trim() || 'RobTop Games';
+        const safeName = rawText.replace(/\s+/g, ' ').replace(/[\/\\?%*:|"<>]/g, '_');
+        downloadLink.download = `${safeName}.png`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      } catch (err) {
+        console.error('Download failed:', err);
+      }
+    });
+
+    attachButtonEffects('btnCopy', async () => {
+      if (!navigator.clipboard || !window.ClipboardItem) {
+        alert('Clipboard API with image support is not supported in this browser.');
+        return;
+      }
+      try {
+        const item = new ClipboardItem({
+          'image/png': generateLogoBlob()
+        });
+        await navigator.clipboard.write([item]);
+        showCopyNotification('Copied!');
+      } catch (err) {
+        console.error('Failed to copy image:', err);
+        showCopyNotification('Copy Failed');
+      }
+    });
+
+    input.addEventListener('input', (e) => {
+      autoGrowTextarea();
+      renderLines(getLines(e.target.value));
+    });
+
+    window.addEventListener('resize', () => resizeSvg(getLines(input.value)));
+
+    input.value = '';
+    autoGrowTextarea();
+    renderLines(DEFAULT_LINES);
+
+    getPusabFontDataUri();
+
+    document.fonts.ready.then(() => {
+      renderLines(getLines(input.value));
+    });
+    window.addEventListener('load', () => {
+      renderLines(getLines(input.value));
+    });
+  </script>
+
+</body>
+</html>

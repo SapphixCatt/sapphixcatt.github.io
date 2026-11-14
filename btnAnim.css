@@ -1,0 +1,69 @@
+/* ===================================================
+   GEOMETRY DASH BUTTON ANIMATIONS (btnAnim.css)
+   =================================================== */
+
+.btn {
+  cursor: pointer;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-drag: none;
+  transform-origin: center center;
+  transform: scale(1);
+}
+
+/* HOVER-AWAY RELEASE ANIMATION */
+.btn.gd-release {
+  animation: gdRelease 0.26s ease-out forwards;
+}
+
+/* HOLD / CLICK ANIMATION */
+.btn.gd-hold {
+  animation: gdHold 0.26s forwards !important;
+}
+
+/* ---------------------------------------------------
+   KEYFRAME SEQUENCES (STANDARD)
+   --------------------------------------------------- */
+
+/* HOLD SEQUENCE:
+   0.11s (42.8%): Scale 1 -> 1.2 (Slow start, fast end)
+   0.075s (71.4%): Scale 1.2 -> 1.15
+   0.075s (100%):  Scale 1.15 -> 1.2
+*/
+@keyframes gdHold {
+  0% {
+    transform: scale(1);
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 1);
+  }
+  42.8% {
+    transform: scale(1.2);
+    animation-timing-function: ease-in-out;
+  }
+  71.4% {
+    transform: scale(1.15);
+    animation-timing-function: ease-in-out;
+  }
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+/* HOVER-AWAY RELEASE SEQUENCE:
+   0.11s (42.8%): Scale 1.2 -> 1
+   0.075s (71.4%): Scale 1 -> 1.05
+   0.075s (100%):  Scale 1.05 -> 1
+*/
+@keyframes gdRelease {
+  0% {
+    transform: scale(1.2);
+  }
+  42.8% {
+    transform: scale(1);
+  }
+  71.4% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
