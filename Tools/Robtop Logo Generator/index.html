@@ -66,6 +66,129 @@
       object-fit: contain;
     }
 
+    .right-panels {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    /* Color Panel styled with img/GJ_square01-uhd.png */
+    .color-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 8px 14px 12px 14px;
+      border-style: solid;
+      border-width: 16px;
+      border-image-source: url('img/GJ_square01-uhd.png');
+      border-image-slice: 48 fill;
+      border-image-repeat: stretch;
+    }
+
+    .color-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 48px;
+      margin-bottom: 2px;
+    }
+
+    .color-panel-title {
+      font-family: 'Pusab', sans-serif;
+      font-size: 15px;
+      color: #ffc800;
+      -webkit-text-stroke: 1.5px #000000;
+      paint-order: stroke fill;
+      user-select: none;
+    }
+
+    .reset-btn {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      cursor: pointer;
+      z-index: 20;
+    }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .color-label {
+      font-family: 'Pusab', sans-serif;
+      font-size: 13px;
+      color: #ffffff;
+      -webkit-text-stroke: 1.5px #000000;
+      paint-order: stroke fill;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .hex-inputs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hex-input {
+      width: 82px;
+      padding: 4px 6px;
+      font-family: 'Pusab', sans-serif;
+      font-size: 14px;
+      color: #ffffff;
+      -webkit-text-stroke: 1.2px #000000;
+      paint-order: stroke fill;
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid rgba(0, 0, 0, 0.65);
+      border-radius: 6px;
+      text-align: center;
+      text-transform: uppercase;
+      outline: none;
+      letter-spacing: 0.5px;
+    }
+
+    .hex-input:focus {
+      border-color: #ffc800;
+    }
+
+    .hex-input::placeholder {
+      color: #bbbbbb;
+      -webkit-text-stroke: 1px #000000;
+    }
+
+    .color-swatch-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .color-swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      border: 2px solid #000000;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .color-swatch:hover {
+      border-color: #ffc800;
+    }
+
+    /* Hidden native color picker for popup */
+    .color-picker-native {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+
     .layer-toggles {
       display: flex;
       flex-direction: column;
@@ -232,9 +355,9 @@
       user-select: none;
     }
 
-    /* Layer Base Styles - Increased shadow opacity for visibility */
+    /* Layer Base Styles */
     .layer-shadow {
-      fill: #000000;
+      fill: var(--shadow-color, #000000);
       filter: url(#uniformShadow10);
       opacity: 1;
     }
@@ -248,41 +371,125 @@
     }
 
     .layer-yellow-text {
-      fill: #ffee00;
+      fill: var(--yellow-color, #ffee00);
     }
 
     .layer-black-text {
-      fill: #000000;
+      fill: var(--black-color, #000000);
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Bar with Back Button and 5 Layer Toggles -->
+  <!-- Top Bar with Back Button, Color Customizer on top, and Layer Toggles underneath -->
   <div class="top-bar">
     <div class="back-btn-container">
       <img id="btnBack" class="btn" src="img/btn_back.png" alt="Back" title="Go Back">
     </div>
-    <div class="layer-toggles">
-      <div class="toggle-row">
-        <span class="toggle-label">Black Text</span>
-        <img id="toggleBlack" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Black Text" data-layer="black">
+
+    <div class="right-panels">
+      <!-- Custom Hex Color Panel using img/GJ_square01-uhd.png -->
+      <div class="color-panel">
+        <div class="color-panel-header">
+          <div class="color-panel-title">Colors</div>
+          <img id="btnReset" class="btn reset-btn" src="img/btn_reset.png" alt="Reset Colors" title="Reset Colors">
+        </div>
+
+        <!-- 1. Black Text -->
+        <div class="color-row">
+          <span class="color-label">Black Text</span>
+          <div class="hex-inputs">
+            <div class="color-swatch-wrapper">
+              <span id="swatchBlack" class="color-swatch" style="background: #000000;" title="Click swatch to pick color"></span>
+              <input type="color" id="pickerBlack" class="color-picker-native" value="#000000">
+            </div>
+            <input id="hexBlack" class="hex-input" type="text" maxlength="6" value="000000" placeholder="000000" spellcheck="false">
+          </div>
+        </div>
+
+        <!-- 2. Yellow Text -->
+        <div class="color-row">
+          <span class="color-label">Yellow Text</span>
+          <div class="hex-inputs">
+            <div class="color-swatch-wrapper">
+              <span id="swatchYellow" class="color-swatch" style="background: #FFEE00;" title="Click swatch to pick color"></span>
+              <input type="color" id="pickerYellow" class="color-picker-native" value="#FFEE00">
+            </div>
+            <input id="hexYellow" class="hex-input" type="text" maxlength="6" value="FFEE00" placeholder="FFEE00" spellcheck="false">
+          </div>
+        </div>
+
+        <!-- 3. Text BG Gradient (Top / Bottom) -->
+        <div class="color-row">
+          <span class="color-label">Text BG Gradient</span>
+          <div class="hex-inputs">
+            <div class="color-swatch-wrapper">
+              <span id="swatchMainTop" class="color-swatch" style="background: #FEB403;" title="Top Color"></span>
+              <input type="color" id="pickerMainTop" class="color-picker-native" value="#FEB403">
+            </div>
+            <input id="hexMainTop" class="hex-input" type="text" maxlength="6" value="FEB403" placeholder="FEB403" spellcheck="false">
+
+            <div class="color-swatch-wrapper">
+              <span id="swatchMainBot" class="color-swatch" style="background: #FF8201;" title="Bottom Color"></span>
+              <input type="color" id="pickerMainBot" class="color-picker-native" value="#FF8201">
+            </div>
+            <input id="hexMainBot" class="hex-input" type="text" maxlength="6" value="FF8201" placeholder="FF8201" spellcheck="false">
+          </div>
+        </div>
+
+        <!-- 4. Text BG Gradient Outline (Top / Bottom) -->
+        <div class="color-row">
+          <span class="color-label">Text BG Outline</span>
+          <div class="hex-inputs">
+            <div class="color-swatch-wrapper">
+              <span id="swatchOuterTop" class="color-swatch" style="background: #FEEF78;" title="Top Color"></span>
+              <input type="color" id="pickerOuterTop" class="color-picker-native" value="#FEEF78">
+            </div>
+            <input id="hexOuterTop" class="hex-input" type="text" maxlength="6" value="FEEF78" placeholder="FEEF78" spellcheck="false">
+
+            <div class="color-swatch-wrapper">
+              <span id="swatchOuterBot" class="color-swatch" style="background: #F15D03;" title="Bottom Color"></span>
+              <input type="color" id="pickerOuterBot" class="color-picker-native" value="#F15D03">
+            </div>
+            <input id="hexOuterBot" class="hex-input" type="text" maxlength="6" value="F15D03" placeholder="F15D03" spellcheck="false">
+          </div>
+        </div>
+
+        <!-- 5. Shadow -->
+        <div class="color-row">
+          <span class="color-label">Shadow</span>
+          <div class="hex-inputs">
+            <div class="color-swatch-wrapper">
+              <span id="swatchShadow" class="color-swatch" style="background: #000000;" title="Click swatch to pick color"></span>
+              <input type="color" id="pickerShadow" class="color-picker-native" value="#000000">
+            </div>
+            <input id="hexShadow" class="hex-input" type="text" maxlength="6" value="000000" placeholder="000000" spellcheck="false">
+          </div>
+        </div>
       </div>
-      <div class="toggle-row">
-        <span class="toggle-label">Yellow Text</span>
-        <img id="toggleYellow" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Yellow Text" data-layer="yellow">
-      </div>
-      <div class="toggle-row">
-        <span class="toggle-label">Text Background</span>
-        <img id="toggleMain" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Text Background" data-layer="main">
-      </div>
-      <div class="toggle-row">
-        <span class="toggle-label">Text Background Outline</span>
-        <img id="toggleOuter" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Text Background Outline" data-layer="outer">
-      </div>
-      <div class="toggle-row">
-        <span class="toggle-label">Shadow</span>
-        <img id="toggleShadow" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Shadow" data-layer="shadow">
+
+      <!-- Layer Toggles moved underneath the Color Panel -->
+      <div class="layer-toggles">
+        <div class="toggle-row">
+          <span class="toggle-label">Black Text</span>
+          <img id="toggleBlack" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Black Text" data-layer="black">
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Yellow Text</span>
+          <img id="toggleYellow" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Yellow Text" data-layer="yellow">
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Text Background</span>
+          <img id="toggleMain" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Text Background" data-layer="main">
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Text Background Outline</span>
+          <img id="toggleOuter" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Text Background Outline" data-layer="outer">
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Shadow</span>
+          <img id="toggleShadow" class="btn toggle-btn" src="img/btn_on.png" alt="Toggle Shadow" data-layer="shadow">
+        </div>
       </div>
     </div>
   </div>
@@ -353,9 +560,137 @@
       black: true
     };
 
+    // Custom hex colors (stored without #)
+    const customColors = {
+      black: '000000',
+      yellow: 'FFEE00',
+      mainTop: 'FEB403',
+      mainBot: 'FF8201',
+      outerTop: 'FEEF78',
+      outerBot: 'F15D03',
+      shadow: '000000'
+    };
+
     const SVG_NS = 'http://www.w3.org/2000/svg';
     const DEFAULT_LINES = ['RobTop Games', 'Logo Generator!'];
-    const LINE_HEIGHT = 26; // Scaled down for 20px font size
+    const LINE_HEIGHT = 26;
+
+    function normalizeHex(raw) {
+      const cleaned = raw.replace(/[^0-9a-fA-F]/g, '').toUpperCase();
+      if (cleaned.length === 6) return `#${cleaned}`;
+      if (cleaned.length === 3) {
+        return `#${cleaned[0]}${cleaned[0]}${cleaned[1]}${cleaned[1]}${cleaned[2]}${cleaned[2]}`;
+      }
+      return null;
+    }
+
+    function applyColorsToLogo() {
+      const blackHex = normalizeHex(customColors.black) || '#000000';
+      const yellowHex = normalizeHex(customColors.yellow) || '#FFEE00';
+      const mainTopHex = normalizeHex(customColors.mainTop) || '#FEB403';
+      const mainBotHex = normalizeHex(customColors.mainBot) || '#FF8201';
+      const outerTopHex = normalizeHex(customColors.outerTop) || '#FEEF78';
+      const outerBotHex = normalizeHex(customColors.outerBot) || '#F15D03';
+      const shadowHex = normalizeHex(customColors.shadow) || '#000000';
+
+      document.documentElement.style.setProperty('--black-color', blackHex);
+      document.documentElement.style.setProperty('--yellow-color', yellowHex);
+      document.documentElement.style.setProperty('--shadow-color', shadowHex);
+
+      const mainStops = svgDefs.querySelectorAll('#mainBlockGrad stop');
+      if (mainStops.length >= 2) {
+        mainStops[0].setAttribute('stop-color', mainTopHex);
+        mainStops[1].setAttribute('stop-color', mainBotHex);
+      }
+
+      const outerStops = svgDefs.querySelectorAll('#outerRimGrad stop');
+      if (outerStops.length >= 2) {
+        outerStops[0].setAttribute('stop-color', outerTopHex);
+        outerStops[1].setAttribute('stop-color', outerBotHex);
+      }
+
+      const shadowFlood = svgDefs.querySelector('#shadowFlood');
+      if (shadowFlood) {
+        shadowFlood.setAttribute('flood-color', shadowHex);
+      }
+    }
+
+    function bindColorControls(inputId, swatchId, pickerId, colorKey, fallbackHex) {
+      const el = document.getElementById(inputId);
+      const swatch = document.getElementById(swatchId);
+      const picker = document.getElementById(pickerId);
+      if (!el) return;
+
+      const updateValues = (hexValue) => {
+        const sanitized = hexValue.replace(/[^0-9a-fA-F]/g, '').toUpperCase().slice(0, 6);
+        el.value = sanitized;
+        const valid = normalizeHex(sanitized);
+        if (valid) {
+          customColors[colorKey] = sanitized;
+          if (swatch) swatch.style.background = valid;
+          if (picker) picker.value = valid;
+          applyColorsToLogo();
+        }
+      };
+
+      el.addEventListener('input', () => {
+        updateValues(el.value);
+      });
+
+      el.addEventListener('blur', () => {
+        const valid = normalizeHex(el.value);
+        if (!valid) {
+          updateValues(fallbackHex);
+        }
+      });
+
+      if (swatch && picker) {
+        swatch.addEventListener('click', () => {
+          picker.click();
+        });
+      }
+
+      if (picker) {
+        picker.addEventListener('input', () => {
+          const val = picker.value; // e.g. #ff0000
+          updateValues(val.replace('#', ''));
+        });
+      }
+    }
+
+    bindColorControls('hexBlack', 'swatchBlack', 'pickerBlack', 'black', '000000');
+    bindColorControls('hexYellow', 'swatchYellow', 'pickerYellow', 'yellow', 'FFEE00');
+    bindColorControls('hexMainTop', 'swatchMainTop', 'pickerMainTop', 'mainTop', 'FEB403');
+    bindColorControls('hexMainBot', 'swatchMainBot', 'pickerMainBot', 'mainBot', 'FF8201');
+    bindColorControls('hexOuterTop', 'swatchOuterTop', 'pickerOuterTop', 'outerTop', 'FEEF78');
+    bindColorControls('hexOuterBot', 'swatchOuterBot', 'pickerOuterBot', 'outerBot', 'F15D03');
+    bindColorControls('hexShadow', 'swatchShadow', 'pickerShadow', 'shadow', '000000');
+
+    function resetColors() {
+      const defaultColors = {
+        Black: '000000',
+        Yellow: 'FFEE00',
+        MainTop: 'FEB403',
+        MainBot: 'FF8201',
+        OuterTop: 'FEEF78',
+        OuterBot: 'F15D03',
+        Shadow: '000000'
+      };
+
+      for (const [key, val] of Object.entries(defaultColors)) {
+        const lowerKey = key === 'MainTop' ? 'mainTop' : key === 'MainBot' ? 'mainBot' : key === 'OuterTop' ? 'outerTop' : key === 'OuterBot' ? 'outerBot' : key.toLowerCase();
+        customColors[lowerKey] = val;
+
+        const el = document.getElementById(`hex${key}`);
+        const swatch = document.getElementById(`swatch${key}`);
+        const picker = document.getElementById(`picker${key}`);
+
+        if (el) el.value = val;
+        if (swatch) swatch.style.background = `#${val}`;
+        if (picker) picker.value = `#${val}`;
+      }
+      applyColorsToLogo();
+    }
 
     function getLines(rawValue) {
       if (rawValue.trim().length === 0) {
@@ -370,19 +705,29 @@
     }
 
     function renderLines(lines) {
+      const blackHex = normalizeHex(customColors.black) || '#000000';
+      const yellowHex = normalizeHex(customColors.yellow) || '#FFEE00';
+      const mainTopHex = normalizeHex(customColors.mainTop) || '#FEB403';
+      const mainBotHex = normalizeHex(customColors.mainBot) || '#FF8201';
+      const outerTopHex = normalizeHex(customColors.outerTop) || '#FEEF78';
+      const outerBotHex = normalizeHex(customColors.outerBot) || '#F15D03';
+      const shadowHex = normalizeHex(customColors.shadow) || '#000000';
+
       svgDefs.innerHTML = `
         <linearGradient id="mainBlockGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#feb403" />
-          <stop offset="100%" stop-color="#ff8201" />
+          <stop offset="0%" stop-color="${mainTopHex}" />
+          <stop offset="100%" stop-color="${mainBotHex}" />
         </linearGradient>
 
         <linearGradient id="outerRimGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#feef78" />
-          <stop offset="100%" stop-color="#f15d03" />
+          <stop offset="0%" stop-color="${outerTopHex}" />
+          <stop offset="100%" stop-color="${outerBotHex}" />
         </linearGradient>
 
         <filter id="uniformShadow10" x="-200%" y="-200%" width="500%" height="500%">
           <feGaussianBlur in="SourceAlpha" stdDeviation="11" result="blurOut" />
+          <feFlood id="shadowFlood" flood-color="${shadowHex}" result="shadowColor" />
+          <feComposite in="shadowColor" in2="blurOut" operator="in" />
         </filter>
       `;
 
@@ -479,6 +824,7 @@
         groupBlack.appendChild(createTextElement('layer-black-text', 0, 0));
       });
 
+      applyColorsToLogo();
       applyLayerVisibility();
       resizeSvg(lines);
     }
@@ -558,12 +904,12 @@
       });
     }
 
-    // Attach button animations and actions for action buttons and navigation (goes 1 directory back)
     attachButtonEffects('btnBack', () => {
-      window.location.href = '../index.html';
+      window.location.href = '../';
     });
 
-    // Attach toggle button listeners
+    attachButtonEffects('btnReset', resetColors);
+
     document.querySelectorAll('.toggle-btn').forEach(btn => {
       const layerKey = btn.getAttribute('data-layer');
       attachButtonEffects(btn.id, () => {
@@ -578,6 +924,10 @@
       const fontDataUri = await getPusabFontDataUri();
       const lines = getLines(input.value);
       const box = getTightBox(lines);
+
+      const blackHex = normalizeHex(customColors.black) || '#000000';
+      const yellowHex = normalizeHex(customColors.yellow) || '#FFEE00';
+      const shadowHex = normalizeHex(customColors.shadow) || '#000000';
 
       const clonedSvg = svg.cloneNode(true);
       clonedSvg.setAttribute('xmlns', SVG_NS);
@@ -604,7 +954,7 @@
           paint-order: stroke fill;
         }
         .layer-shadow {
-          fill: #000000;
+          fill: ${shadowHex};
           filter: url(#uniformShadow10);
           opacity: 1;
         }
@@ -615,10 +965,10 @@
           fill: url(#mainBlockGrad);
         }
         .layer-yellow-text {
-          fill: #ffee00;
+          fill: ${yellowHex};
         }
         .layer-black-text {
-          fill: #000000;
+          fill: ${blackHex};
         }
       `;
       clonedSvg.insertBefore(styleEl, clonedSvg.firstChild);
@@ -629,7 +979,6 @@
       return new Promise((resolve, reject) => {
         const image = new Image();
         image.onload = () => {
-          // Ultra HD high-resolution rendering scale (4x crisp detail)
           const canvas = document.createElement('canvas');
           const scale = 4;
           canvas.width = box.vbWidth * scale;

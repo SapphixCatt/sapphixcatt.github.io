@@ -193,14 +193,14 @@
             });
         }
 
-        // Back button: goes 1 directory behind to the parent directory
+        // Back button: goes 1 directory behind to the parent directory without showing index.html in the URL
         setupGDButton('backBtn', () => {
-            window.location.href = '../index.html';
+            window.location.href = '../';
         });
 
-        // RGLG button: goes directly to Robtop Logo Generator with no cloaking
+        // RGLG button: goes directly to Robtop Logo Generator folder without showing index.html in the URL
         setupGDButton('rglgBtn', () => {
-            window.location.href = 'Robtop Logo Generator/index.html';
+            window.location.href = 'Robtop Logo Generator/';
         });
     </script>
 
