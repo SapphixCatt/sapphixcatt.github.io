@@ -90,18 +90,28 @@
             width: 90px;
         }
 
-        /* Center RGLG Button (Scaled to 250% size: 320px * 2.5 = 800px) */
-        .rglg-btn-container {
+        /* Center Buttons Container layout for stacked (vertical) buttons */
+        .buttons-center-container {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px; /* Space between the buttons */
+        }
+
+        /* Individual button containers (scaled equivalent to 250% size: ~800px) */
+        .rglg-btn-container,
+        .gdse-btn-container {
             width: 800px;
         }
 
         .back-btn-container img,
-        .rglg-btn-container img {
+        .rglg-btn-container img,
+        .gdse-btn-container img {
             width: 100%;
             height: auto;
             display: block;
@@ -131,10 +141,17 @@
         </div>
     </div>
 
-    <!-- Center Robtop Logo Generator Button (250% size) -->
-    <div class="rglg-btn-container">
-        <div id="rglgBtn" class="btn">
-            <img src="img/btn_RGLG.png" alt="Robtop Logo Generator">
+    <!-- Center Stacked Buttons Container (RGLG on top, Geometry Dash Save Editor on bottom) -->
+    <div class="buttons-center-container">
+        <div class="rglg-btn-container">
+            <div id="rglgBtn" class="btn">
+                <img src="img/btn_RGLG.png" alt="Robtop Logo Generator">
+            </div>
+        </div>
+        <div class="gdse-btn-container">
+            <div id="gdseBtn" class="btn">
+                <img src="img/btn_GDSE.png" alt="Geometry Dash Save Editor">
+            </div>
         </div>
     </div>
 
@@ -201,6 +218,11 @@
         // RGLG button: goes directly to Robtop Logo Generator folder without showing index.html in the URL
         setupGDButton('rglgBtn', () => {
             window.location.href = 'Robtop Logo Generator/';
+        });
+
+        // GDSE button: goes directly to Geometry Dash Save Editor folder without showing index.html in the URL
+        setupGDButton('gdseBtn', () => {
+            window.location.href = 'Geometry Dash Save Editor/';
         });
     </script>
 
